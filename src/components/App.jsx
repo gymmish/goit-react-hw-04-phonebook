@@ -10,16 +10,17 @@ export default function App() {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    const seveContacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(seveContacts);
-    if (parsedContacts) {
+    const contacts = localStorage.getItem('contacts');
+    if (contacts !== null) {
+      const parsedContacts = JSON.parse(contacts);
       setContacts(parsedContacts);
+      return;
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+    localStorage.setItem('contact', JSON.stringify(contacts));
+  });
 
   const addContact = contact => {
     const id = nanoid();
@@ -29,10 +30,7 @@ export default function App() {
       alert(`${name} is already in contacts`);
       return;
     }
-
-    setContacts(prevState => ({
-      contacts: [...prevState, { id, ...contact }],
-    }));
+    setContacts([...name, { id, ...contact }]);
   };
 
   const deleteItem = id => {
@@ -40,15 +38,13 @@ export default function App() {
   };
 
   const filterChange = e => {
-    setFilter(e.currentTarget.value);
+    const filter = e.target.value;
+    setFilter(filter.toLowerCase());
   };
 
-  const filterContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(normalizedFilter)
-    );
-  };
+  const filterContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <>
@@ -58,7 +54,7 @@ export default function App() {
       <Section title="Contacts">
         <ContactFilter onChange={filterChange} />
 
-        <ContactList onDelete={deleteItem} items={filterContacts()} />
+        <ContactList onDelete={deleteItem} items={filterContacts} />
       </Section>
     </>
   );
@@ -87,20 +83,20 @@ export default function App() {
 //   }
 
 //   addContact = contact => {
-//     const id = nanoid();
-//     const { name } = contact;
+//   const id = nanoid();
+//   const { name } = contact;
 
-//     if (
-//       this.state.contacts.filter(contact => contact.name === name).length > 0
-//     ) {
-//       alert(`${name} is already in contacts`);
-//       return;
-//     }
+//   if (
+//     this.state.contacts.filter(contact => contact.name === name).length > 0
+//   ) {
+//     alert(`${name} is already in contacts`);
+//     return;
+//   }
 
-//     this.setState(prevState => ({
-//       contacts: [...prevState.contacts, { id, ...contact }],
-//     }));
-//   };
+//   this.setState(prevState => ({
+//     contacts: [...prevState.contacts, { id, ...contact }],
+//   }));
+// };
 //   deleteItem = id => {
 //     this.setState(prevState => ({
 //       contacts: [...prevState.contacts.filter(item => item.id !== id)],
