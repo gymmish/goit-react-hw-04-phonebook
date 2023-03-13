@@ -26,17 +26,9 @@ export default function PhoneForm({ onSubmit }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit({ name, number });
     e.target.reset();
+    onSubmit({ name, number });
   };
-
-  //   this.props.onSubmit(this.state);
-  //   e.target.reset();
-  //   this.setState({
-  //     name: '',
-  //     number: '',
-  //   });
-  // };
 
   return (
     <Formik>
